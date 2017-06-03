@@ -14,6 +14,7 @@ import com.example.tatsuki.tetris.tetriminos.TetriminoGenerator;
 
 /**
  * Created by tatsuki on 2017/06/01.
+ *
  */
 public class MainView extends SurfaceView implements SurfaceHolder.Callback, Runnable, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     /**
@@ -29,17 +30,13 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
      */
     private Thread thread;
     /**
-     * ゲーム中であるあどうか
-     */
-    private static Boolean isGaming = true;
-    /**
      * フィールド
      */
-    private static Field field = new Field();
+    private Field field = new Field();
     /**
      * テトリミノ
      */
-    private static AbstractTetrimino tetrimino = TetriminoGenerator.generateTetrimino();
+    private AbstractTetrimino tetrimino = TetriminoGenerator.generateTetrimino();
 
     /**
      * コンストラクタ
@@ -92,8 +89,6 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
                 e.printStackTrace();
             }
         }
-
-        isGaming = false;
     }
 
     private void onTick() {
@@ -128,32 +123,14 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        int width = this.getWidth();
-
-        int deltaX;
-        if (e.getX() < width / 2) {
-            deltaX = -1;
+        int direction;
+        if (e.getX() < this.getWidth() / 2) {
+            direction = -1;
         } else {
-            deltaX = 1;
+            direction = 1;
         }
 
-        move(deltaX, 0);
-        this.printOut();
-        return false;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent e) {
-        int width = this.getWidth();
-
-        int deltaX;
-        if (e.getX() < width / 2) {
-            deltaX = -1;
-        } else {
-            deltaX = 1;
-        }
-
-        move(deltaX, 0);
+        turn(direction);
         this.printOut();
         return false;
     }
@@ -166,18 +143,23 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
                 this.tetrimino.move(0, 1);
             }
         } else {
-            // 横向きにフリックされたら回転
-            int direction;
-            if (velocityX < 0) {
-                direction = -1;
+            // 横向きにフリックされたら移動
+            int deltaX;
+            if (velocityX < 0 ) {
+                deltaX = -1;
             } else {
-                direction = 1;
+                deltaX = 1;
             }
 
-            turn(direction);
+            move(deltaX, 0);
         }
 
         this.printOut();
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
         return false;
     }
 

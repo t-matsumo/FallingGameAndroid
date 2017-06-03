@@ -1,11 +1,9 @@
 package com.example.tatsuki.tetris.tetriminos;
 
-import com.example.tatsuki.tetris.position.Position;
-
 /**
  * JTetrimino
  */
-public class JTetrimino extends AbstractTetrimino {
+class JTetrimino extends AbstractTetrimino {
   /** テトリミノの形 */
   private static final int[][][] J_SHAPES = {
     {
@@ -30,7 +28,7 @@ public class JTetrimino extends AbstractTetrimino {
     }
   };
   
-  public JTetrimino() {
+  JTetrimino() {
     super(J_SHAPES);
   }
 }

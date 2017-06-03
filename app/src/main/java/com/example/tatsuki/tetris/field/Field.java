@@ -52,7 +52,6 @@ public class Field {
 
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.BLACK);
         int blockWidth = canvas.getWidth() / 10;
         int blockHight = canvas.getHeight() / 23;
 
@@ -67,6 +66,7 @@ public class Field {
 //                                         x - position.getX() * blockSize + blockSize, y - position.getY() * blockSize + blockSize), paint);
                 } else {
                     if (field[y][x] == 0) {
+                        paint.setColor(Color.BLACK);
                         canvas.drawRect(new Rect(x * blockWidth + 1, y * blockHight + 1,
                                 x * blockWidth + blockWidth - 1, y * blockHight + blockHight - 1), paint);
                     }
