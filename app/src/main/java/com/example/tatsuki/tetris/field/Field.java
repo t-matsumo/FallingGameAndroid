@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.example.tatsuki.tetris.block.Block;
 import com.example.tatsuki.tetris.position.Position;
 import com.example.tatsuki.tetris.tetriminos.AbstractTetrimino;
 
@@ -24,7 +25,7 @@ public class Field {
     /**
      * フィールド
      */
-    private int[][] field = new int[FIELD_HIGHT][FIELD_WIDTH];
+    private Block[][] field = new Block[FIELD_HIGHT][FIELD_WIDTH];
 
     /**
      * ゲームオーバーの判定
@@ -34,12 +35,12 @@ public class Field {
     }
 
     public void fixTetrimino(AbstractTetrimino tetrimino) {
-        int[][] shape = tetrimino.getShape();
+        Block[][] shape = tetrimino.getShape();
         Position position = tetrimino.getPosition();
 
         for (int y = 0; y < shape.length; y++) {
             for (int x = 0; x < shape[y].length; x++) {
-                if (shape[y][x] == 1) {
+                if (shape[y][x] != null) {
                     field[position.getY() + y][position.getX() + x] = shape[y][x];
                 }
             }
@@ -47,11 +48,12 @@ public class Field {
     }
 
     public void printOut(AbstractTetrimino tetrimino, Canvas canvas) {
-        int[][] shape = tetrimino.getShape();
+        Block[][] shape = tetrimino.getShape();
         Position position = tetrimino.getPosition();
 
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
+
         int blockWidth = canvas.getWidth() / 10;
         int blockHight = canvas.getHeight() / 23;
 
@@ -61,11 +63,16 @@ public class Field {
                         && y < position.getY() + shape.length
                         && x >= position.getX()
                         && x < position.getX() + shape[0].length
-                        && shape[y - position.getY()][x - position.getX()] == 1) {
-//                canvas.drawRect(new Rect(x - position.getX() * blockSize, y - position.getY() * blockSize,
-//                                         x - position.getX() * blockSize + blockSize, y - position.getY() * blockSize + blockSize), paint);
+                        && shape[y - position.getY()][x - position.getX()] != null) {
+                    paint.setColor(shape[y - position.getY()][x - position.getX()].getColorInt());
+                    canvas.drawRect(new Rect(x * blockWidth + 1, y * blockHight + 1,
+                            x * blockWidth + blockWidth - 1, y * blockHight + blockHight - 1), paint);
                 } else {
-                    if (field[y][x] == 0) {
+                    if (field[y][x] != null) {
+                        paint.setColor(field[y][x].getColorInt());
+                        canvas.drawRect(new Rect(x * blockWidth + 1, y * blockHight + 1,
+                                x * blockWidth + blockWidth - 1, y * blockHight + blockHight - 1), paint);
+                    } else {
                         paint.setColor(Color.BLACK);
                         canvas.drawRect(new Rect(x * blockWidth + 1, y * blockHight + 1,
                                 x * blockWidth + blockWidth - 1, y * blockHight + blockHight - 1), paint);
@@ -85,9 +92,9 @@ public class Field {
         }
     }
 
-    private Boolean canBanish(int[] row) {
-        for (int element : row) {
-            if (element == 0) {
+    private Boolean canBanish(Block[] row) {
+        for (Block element : row) {
+            if (element == null) {
                 return false;
             }
         }
@@ -95,7 +102,7 @@ public class Field {
         return true;
     }
 
-    public int[][] getField() {
+    public Block[][] getField() {
         return field;
     }
 }

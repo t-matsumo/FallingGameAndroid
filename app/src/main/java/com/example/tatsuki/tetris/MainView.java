@@ -14,7 +14,6 @@ import com.example.tatsuki.tetris.tetriminos.TetriminoGenerator;
 
 /**
  * Created by tatsuki on 2017/06/01.
- *
  */
 public class MainView extends SurfaceView implements SurfaceHolder.Callback, Runnable, GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
     /**
@@ -51,26 +50,14 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
     }
 
     @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        this.thread = null;
-    }
-
-    @Override
     public void surfaceCreated(SurfaceHolder holder) {
         this.thread = new Thread(this);
         this.thread.start();
     }
 
-    public void move(int deltaX, int deltaY) {
-        if (tetrimino.canMove(field.getField(), deltaX, deltaY)) {
-            tetrimino.move(deltaX, deltaY);
-        }
-    }
-
-    public void turn(int direction) {
-        if (tetrimino.canTurn(field.getField(), direction)) {
-            tetrimino.turn(direction);
-        }
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        this.thread = null;
     }
 
     @Override
@@ -78,7 +65,15 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
         while (this.thread != null && !(field.isGameOver(tetrimino))) {
             long nextTime = System.currentTimeMillis() + 500;
 
-            onTick();
+            field.banish();
+            this.printOut();
+
+            if (tetrimino.canMove(this.field.getField(), 0, 1)) {
+                tetrimino.move(0, 1);
+            } else {
+                field.fixTetrimino(tetrimino);
+                tetrimino = TetriminoGenerator.generateTetrimino();
+            }
 
             try {
                 long sleepTime = nextTime - System.currentTimeMillis();
@@ -88,18 +83,6 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    private void onTick() {
-        field.banish();
-        this.printOut();
-
-        if (tetrimino.canMove(field.getField(), 0, 1)) {
-            tetrimino.move(0, 1);
-        } else {
-            field.fixTetrimino(tetrimino);
-            tetrimino = TetriminoGenerator.generateTetrimino();
         }
     }
 
@@ -130,7 +113,9 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
             direction = 1;
         }
 
-        turn(direction);
+        if (tetrimino.canTurn(field.getField(), direction)) {
+            tetrimino.turn(direction);
+        }
         this.printOut();
         return false;
     }
@@ -145,13 +130,15 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback, Run
         } else {
             // 横向きにフリックされたら移動
             int deltaX;
-            if (velocityX < 0 ) {
+            if (velocityX < 0) {
                 deltaX = -1;
             } else {
                 deltaX = 1;
             }
 
-            move(deltaX, 0);
+            if (this.tetrimino.canMove(this.field.getField(), deltaX, 0)) {
+                this.tetrimino.move(deltaX, 0);
+            }
         }
 
         this.printOut();

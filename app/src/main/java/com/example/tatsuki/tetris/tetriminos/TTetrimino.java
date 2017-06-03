@@ -1,32 +1,38 @@
 package com.example.tatsuki.tetris.tetriminos;
 
+import android.graphics.Color;
+
+import com.example.tatsuki.tetris.block.Block;
+
 /**
  * TTetrimino
  */
 class TTetrimino extends AbstractTetrimino {
+    /** テトリミノの色 */
+    private static final int COLOR_INT = Color.CYAN;
     /**
      * テトリミノの形
      */
-    private static final int[][][] T_SHAPES = {
+    private static final Block[][][] T_SHAPES = {
             {
-                    {0, 0, 0},
-                    {1, 1, 1},
-                    {0, 1, 0}
+                    {null, null, null},
+                    {new Block(TTetrimino.COLOR_INT), new Block(TTetrimino.COLOR_INT), new Block(TTetrimino.COLOR_INT)},
+                    {null, new Block(TTetrimino.COLOR_INT), null}
             },
             {
-                    {0, 1, 0},
-                    {0, 1, 1},
-                    {0, 1, 0}
+                    {null, new Block(TTetrimino.COLOR_INT), null},
+                    {null, new Block(TTetrimino.COLOR_INT), new Block(TTetrimino.COLOR_INT)},
+                    {null, new Block(TTetrimino.COLOR_INT), null}
             },
             {
-                    {0, 0, 0},
-                    {0, 1, 0},
-                    {1, 1, 1}
+                    {null, null, null},
+                    {null, new Block(TTetrimino.COLOR_INT), null},
+                    {new Block(TTetrimino.COLOR_INT), new Block(TTetrimino.COLOR_INT), new Block(TTetrimino.COLOR_INT)}
             },
             {
-                    {0, 1, 0},
-                    {1, 1, 0},
-                    {0, 1, 0}
+                    {null, new Block(TTetrimino.COLOR_INT), null},
+                    {new Block(TTetrimino.COLOR_INT), new Block(TTetrimino.COLOR_INT), null},
+                    {null, new Block(TTetrimino.COLOR_INT), null}
             }
     };
 
